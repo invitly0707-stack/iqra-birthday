@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Iqra 🎂</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- DESIGN SYSTEM & CSS VARIABLES --- */
+        :root {
+            --bg-color: #FFF0F5;
+            --primary-pink: #E8A0BF;
+            --accent-rose-gold: #B76E79;
+            --deep-accent: #C9748A;
+            --text-color: #4A2030;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            
+            --ff-heading: 'Playfair Display', serif;
+            --ff-body: 'Nunito', sans-serif;
+            --ff-decor: 'Dancing Script', cursive;
+        }
+
+        /* --- RESET & GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--ff-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 3vw, 2rem);
+            text-align: center;
+        }
+
+        /* --- UTILITIES & GLASSMORPHISM --- */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 160, 191, 0.4);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(183, 110, 121, 0.15);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .btn-glow {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink), var(--accent-rose-gold));
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-family: var(--ff-body);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(201, 116, 138, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-height: 48px;
+            min-width: 44px;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(201, 116, 138, 0.6);
+        }
+
+        .btn-glow:active {
+            transform: translateY(1px);
+        }
+
+        /* Shimmer Effect on Titles */
+        .shimmer-text {
+            font-family: var(--ff-heading);
+            color: var(--text-color);
+            background: linear-gradient(to right, var(--text-color) 0%, var(--deep-accent) 25%, var(--accent-rose-gold) 50%, var(--deep-accent) 75%, var(--text-color) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        /* --- SCROLL INTERSECTION ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1), transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-bounce {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            transition: opacity 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reveal-bounce.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* --- CANVAS LAYERS --- */
+        #hero-canvas, #global-confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        #global-confetti-canvas {
+            position: fixed;
+            z-index: 9999;
+        }
+
+        /* --- SECTION 1: WELCOME SCREEN --- */
+        #welcome {
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-family: var(--ff-heading);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .hero-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeLetter 0.5s forwards ease-out;
+        }
+
+        @keyframes fadeLetter {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-subtitle {
+            font-family: var(--ff-decor);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--deep-accent);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeIn 1.5s 1.5s forwards ease-out;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero-btn-container {
+            opacity: 0;
+            animation: fadeIn 1.5s 2s forwards ease-out;
+        }
+
+        /* --- SECTION 2: HEARTFELT MESSAGE --- */
+        .message-p {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 600;
+            position: relative;
+            padding: 1rem;
+        }
+
+        .quote-mark {
+            font-family: var(--ff-heading);
+            font-size: 5rem;
+            color: rgba(183, 110, 121, 0.25);
+            position: absolute;
+            line-height: 0;
+        }
+        .quote-left { top: -10px; left: -10px; }
+        .quote-right { bottom: -30px; right: -10px; }
+
+        /* Speech Bubble Bestie Card */
+        .speech-bubble-container {
+            position: relative;
+            margin-top: 4rem;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .speech-bubble {
+            background-color: #FCD1D1;
+            border: 2px solid var(--accent-rose-gold);
+            border-radius: 30px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(183, 110, 121, 0.2);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 20px 20px 0;
+            border-style: solid;
+            border-color: #FCD1D1 transparent;
+            display: block;
+            width: 0;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 22px 22px 0;
+            border-style: solid;
+            border-color: var(--accent-rose-gold) transparent;
+            display: block;
+            width: 0;
+            z-index: -1;
+        }
+
+        .crown-icon {
+            font-size: 2.5rem;
+            margin-top: -3.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            animation: crownFloat 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes crownFloat {
+            to { transform: translateY(-7px) rotate(5deg); }
+        }
+
+        .bestie-text {
+            font-family: var(--ff-decor);
+            font-size: clamp(1.2rem, 3vw, 1.75rem);
+            font-style: italic;
+            font-weight: 700;
+            color: #5c2639;
+        }
+
+        /* Sparkle Elements */
+        .sparkle-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .sparkle-star {
+            position: absolute;
+            color: #FFF;
+            text-shadow: 0 0 8px rgba(254, 201, 0, 0.8);
+            font-size: 1.5rem;
+            animation: sparklePulse 1.5s infinite ease-in-out alternate;
+        }
+
+        @keyframes sparklePulse {
+            0% { transform: scale(0.5); opacity: 0.3; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* --- SECTION 3: WHY YOU ARE SPECIAL GRID --- */
+        .grid-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 3rem;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .grid-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .grid-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(183, 110, 121, 0.25);
+            border-color: var(--deep-accent);
+        }
+
+        .card-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .grid-card:hover .card-emoji {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .card-text {
+            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-weight: 700;
+        }
+
+        /* --- SECTION 4: CONFESSION SECTION --- */
+        #confession {
+            background: radial-gradient(circle, rgba(255,240,245,1) 0%, rgba(253,217,227,0.6) 100%);
+            overflow: hidden;
+        }
+
+        .pulse-bg {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(232,160,191,0.25) 0%, rgba(255,240,245,0) 70%);
+            border-radius: 50%;
+            animation: bgPulse 4s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .confession-card {
+            z-index: 1;
+        }
+
+        .heart-icon {
+            font-size: 5rem;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+            filter: drop-shadow(0 0 10px rgba(201, 116, 138, 0.5));
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.15); }
+            40% { transform: scale(1.05); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .confession-title {
+            font-family: var(--ff-heading);
+            font-size: clamp(1.75rem, 4vw, 2.75rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .confession-p {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            font-weight: 600;
+        }
+
+        /* --- SECTION 5: INTERACTIVE SCRATCH CARD --- */
+        .scratch-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 2rem;
+        }
+
+        .scratch-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+
+        .scratch-reveal-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+            z-index: 1;
+            text-align: center;
+        }
+
+        .revealed-message {
+            font-family: var(--ff-heading);
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            font-weight: 700;
+            color: #5c2639;
+            line-height: 1.6;
+        }
+
+        #scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            cursor: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%), auto;
+            touch-action: none;
+        }
+
+        /* --- SECTION 6: BIRTHDAY CAKE (UPDATED ALIGNMENT & ANIMATIONS) --- */
+        .cake-title {
+            margin-bottom: 2rem;
+        }
+
+        .cake-container {
+            position: relative;
+            width: 250px;
+            height: 200px; /* Exact box sizing tracking elements */
+            margin: 0 auto 3rem auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* CSS Rendered Cake */
+        .cake {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            background: #f4a7bb;
+            border-radius: 20px 20px 10px 10px;
+            box-shadow: 0 6px 0 #e48fa6;
+            z-index: 2;
+        }
+
+        .cake::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 35px;
+            background: #fff;
+            border-radius: 20px 20px 10px 10px;
+            top: 0;
+            left: 0;
+        }
+
+        /* Cream Drips */
+        .drip-container {
+            position: absolute;
+            width: 100%;
+            top: 25px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 3;
+            padding: 0 5px;
+        }
+        .drip {
+            width: 25px;
+            height: 20px;
+            background: #fff;
+            border-radius: 0 0 50% 50%;
+        }
+
+        /* Candles Layer perfectly Centered */
+        .candles-row {
+            position: absolute;
+            bottom: 115px; /* Sits directly on top of the cake structure */
+            width: 130px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 4;
+        }
+
+        .candle {
+            position: relative;
+            width: 12px;
+            height: 50px;
+            background: linear-gradient(to right, #b76e79, #e8a0bf);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .flame {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 24px;
+            background: linear-gradient(to bottom, #ffed4a, #ff7a00);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 12px rgba(255,122,0,0.8);
+            animation: flicker 0.6s infinite alternate ease-in-out;
+            transform-origin: bottom center;
+            transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.4s ease;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) rotate(-3deg) scaleX(0.9) scaleY(0.95); }
+            100% { transform: translateX(-50%) rotate(4deg) scaleX(1.1) scaleY(1.05); }
+        }
+
+        .flame.extinguished {
+            opacity: 0 !important;
+            transform: translateX(-50%) scale(0);
+        }
+
+        /* --- SECTION 7: FINAL MESSAGE & SIGNATURE --- */
+        #final-section {
+            background: linear-gradient(to bottom, var(--bg-color) 0%, #ffe4e1 100%);
+            overflow: hidden;
+        }
+
+        .final-card {
+            padding: clamp(2rem, 5vw, 4rem);
+        }
+
+        .final-p {
+            font-size: clamp(1.25rem, 3.5vw, 1.85rem);
+            line-height: 1.8;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+        }
+
+        .signature {
+            font-family: var(--ff-decor);
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            color: var(--deep-accent);
+            font-weight: 700;
+        }
+
+        footer-canvas-container {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 300px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        #footer-canvas {
+            width: 100%; height: 100%;
+        }
+
+        /* --- ACCESSIBILITY / REDUCED MOTION --- */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-delay: 0s !important;
+                animation-duration: 0s !important;
+                transition-duration: 0s !important;
+            }
+            .reveal, .reveal-bounce {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .flame {
+                animation: none !important;
+            }
+            .heart-icon, .crown-icon {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="global-confetti-canvas"></canvas>
+
+    <section id="welcome">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title shimmer-text" id="typewriter-title">Happy Birthday, Iqra 🎂</h1>
+            <p class="hero-subtitle">Today is all about you, my bestie...</p>
+            <div class="hero-btn-container">
+                <a href="#heartfelt" class="btn-glow">Open Your Gift ↓</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="heartfelt">
+        <div class="glass-card reveal">
+            <div class="message-p">
+                <span class="quote-mark quote-left">“</span>
+                Iqra, on your special day, I want you to know that your smile lights up every room, and your presence makes the world a warmer place. I am so grateful you exist. 🌸
+                <span class="quote-mark quote-right">”</span>
+            </div>
+        </div>
+
+        <div class="speech-bubble-container reveal-bounce">
+            <div class="sparkle-container" id="sparkle-layer"></div>
+            <div class="speech-bubble">
+                <span class="crown-icon">👑</span>
+                <p class="bestie-text">
+                    "You are the friend I never knew I needed, and now I cannot imagine a single day without you. God really outdid himself when he made you — because no one else could ever be my person the way you are. I choose you as my best friend, every single day. 🥺🌸"
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="special-reasons">
+        <h2 class="grid-title shimmer-text">Why You Are Special</h2>
+        <div class="icon-grid">
+            <div class="glass-card grid-card reveal" style="transition-delay: 0ms;">
+                <span class="card-emoji">💫</span>
+                <p class="card-text">Your laugh is absolutely contagious</p>
+            </div>
+            <div class="glass-card grid-card reveal" style="transition-delay: 100ms;">
+                <span class="card-emoji">🌺</span>
+                <p class="card-text">You make everyone around you feel seen and loved</p>
+            </div>
+            <div class="glass-card grid-card reveal" style="transition-delay: 200ms;">
+                <span class="card-emoji">✨</span>
+                <p class="card-text">Your kindness is rare and beautiful</p>
+            </div>
+            <div class="glass-card grid-card reveal" style="transition-delay: 300ms;">
+                <span class="card-emoji">🎀</span>
+                <p class="card-text">You light up every single room you walk into</p>
+            </div>
+            <div class="glass-card grid-card reveal" style="transition-delay: 400ms;">
+                <span class="card-emoji">💖</span>
+                <p class="card-text">Your heart is the purest thing I know</p>
+            </div>
+            <div class="glass-card grid-card reveal" style="transition-delay: 500ms;">
+                <span class="card-emoji">🦋</span>
+                <p class="card-text">You make ordinary moments feel magical</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="confession">
+        <div class="pulse-bg"></div>
+        <div class="glass-card confession-card reveal">
+            <span class="heart-icon">❤️</span>
+            <h2 class="confession-title">There is something I have been meaning to say...</h2>
+            <p class="confession-p">
+                Iqra, I do not just wish you a happy birthday. I wish I could be the reason behind your smile every single day. You mean more to me than any words could ever hold. Having you in my life feels like the universe's greatest gift. 💗
+            </p>
+        </div>
+    </section>
+
+    <section id="interactive-scratch">
+        <h2 class="scratch-title shimmer-text">A Small Secret For You</h2>
+        <div class="scratch-container reveal">
+            <div class="scratch-reveal-content">
+                <p class="revealed-message">
+                    My gift to you is this promise —<br>
+                    I will always be here to make you smile, to hold your hand, and to be your person. 🌹<br><br>
+                    <span style="font-family: var(--ff-decor); font-size: 1.5rem; color: var(--deep-accent);">Happy Birthday, Iqra. You deserve the entire world. 💕</span>
+                </p>
+            </div>
+            <canvas id="scratch-canvas"></canvas>
+        </div>
+    </section>
+
+    <section id="cake-section">
+        <h2 class="cake-title shimmer-text design-title" style="font-family: var(--ff-decor); font-size: clamp(2rem, 6vw, 3.5rem);">Make a wish, birthday girl! </h2>
+        
+        <div class="cake-container reveal-bounce">
+            <div class="candles-row">
+                <div class="candle"><div class="flame"></div></div>
+                <div class="candle"><div class="flame"></div></div>
+                <div class="candle"><div class="flame"></div></div>
+            </div>
+            <div class="cake">
+                <div class="drip-container">
+                    <div class="drip"></div>
+                    <div class="drip"></div>
+                    <div class="drip"></div>
+                    <div class="drip"></div>
+                    <div class="drip"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-glow" id="blow-btn">Blow the candles 🎉</button>
+    </section>
+
+    <section id="final-section">
+        <div class="glass-card final-card reveal">
+            <p class="final-p">
+                Wishing you a day as beautiful, bright, and magical as you are, Iqra. You deserve every happiness this world has to offer. Thank you for existing and for being mine to call my best friend. 🌸
+            </p>
+            <p class="signature">— With all my heart, always yours bestie ziya 💕</p>
+        </div>
+        <div class="footer-canvas-container" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 250px; pointer-events: none;">
+            <canvas id="footer-canvas" style="width: 100%; height: 100%;"></canvas>
+        </div>
+    </section>
+
+    <script>
+        /* --- 1. HERO TITLE LETTER-BY-LETTER ENTRANCE --- */
+        const titleEl = document.getElementById('typewriter-title');
+        const text = titleEl.innerText;
+        titleEl.innerHTML = '';
+        [...text].forEach((letter, idx) => {
+            const span = document.createElement('span');
+            span.innerHTML = letter === ' ' ? '&nbsp;' : letter;
+            span.style.animationDelay = `${idx * 0.06}s`;
+            titleEl.appendChild(span);
+        });
+
+        /* --- 2. GLOBAL SCROLL INTERSECTION OBSERVER --- */
+        const revealElements = document.querySelectorAll('.reveal, .reveal-bounce');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 });
+        revealElements.forEach(el => observer.observe(el));
+
+        /* --- 3. HERO CANVAS: FLOATING HEARTS & PETALS --- */
+        const heroCanvas = document.getElementById('hero-canvas');
+        const hCtx = heroCanvas.getContext('2d');
+        let hParticles = [];
+
+        function resizeHeroCanvas() {
+            heroCanvas.width = window.innerWidth;
+            heroCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeHeroCanvas);
+        resizeHeroCanvas();
+
+        class FloatingParticle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * heroCanvas.height;
+            }
+            reset() {
+                this.x = Math.random() * heroCanvas.width;
+                this.y = heroCanvas.height + 20;
+                this.size = Math.random() * 15 + 8;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = Math.sin(Math.random() * 2) * 0.5;
+                this.type = Math.random() > 0.5 ? 'heart' : 'petal';
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 1 - 0.5;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                hCtx.save();
+                hCtx.translate(this.x, this.y);
+                hCtx.rotate((this.rotation * Math.PI) / 180);
+                hCtx.globalAlpha = this.opacity;
+                
+                if (this.type === 'heart') {
+                    hCtx.fillStyle = '#E8A0BF';
+                    hCtx.beginPath();
+                    hCtx.moveTo(0, 0);
+                    hCtx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, 0, 0, this.size);
+                    hCtx.bezierCurveTo(this.size, 0, this.size/2, -this.size/2, 0, 0);
+                    hCtx.fill();
+                } else {
+                    hCtx.fillStyle = '#FFC0CB';
+                    hCtx.beginPath();
+                    hCtx.ellipse(0, 0, this.size / 1.5, this.size, 0, 0, 2 * Math.PI);
+                    hCtx.fill();
+                }
+                hCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) hParticles.push(new FloatingParticle());
+
+        function animateHero() {
+            hCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+            hParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateHero);
+        }
+        animateHero();
+
+        /* --- 4. BESTIE CARD FLOATING SPARKLES --- */
+        const sparkleLayer = document.getElementById('sparkle-layer');
+        for (let i = 0; i < 6; i++) {
+            const star = document.createElement('div');
+            star.className = 'sparkle-star';
+            star.innerText = '✨';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 1.5 + 's';
+            sparkleLayer.appendChild(star);
+        }
+
+        /* --- 5. INTERACTIVE CANVAS SCRATCH CARD --- */
+        const scratchCanvas = document.getElementById('scratch-canvas');
+        const sCtx = scratchCanvas.getContext('2d');
+        let isDrawing = false;
+        let scratchedPixels = 0;
+        let totalPixels = 0;
+        let scratchTriggered = false;
+
+        function initScratchCard() {
+            const rect = scratchCanvas.parentElement.getBoundingClientRect();
+            scratchCanvas.width = rect.width;
+            scratchCanvas.height = rect.height;
+            
+            // Draw Shimmery Rose Gold Metallic Pattern Layer
+            const grad = sCtx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+            grad.addColorStop(0, '#E8A0BF');
+            grad.addColorStop(0.3, '#FCD1D1');
+            grad.addColorStop(0.5, '#B76E79');
+            grad.addColorStop(0.7, '#FCD1D1');
+            grad.addColorStop(1, '#C9748A');
+            sCtx.fillStyle = grad;
+            sCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+            // Overlay Text instruction safely
+            sCtx.font = 'bold 1.15rem sans-serif';
+            sCtx.fillStyle = '#4A2030';
+            sCtx.textAlign = 'center';
+            sCtx.fillText('Scratch here to reveal your gift 🎁', scratchCanvas.width / 2, scratchCanvas.height / 2 + 5);
+            
+            totalPixels = scratchCanvas.width * scratchCanvas.height;
+        }
+
+        window.addEventListener('load', initScratchCard);
+        window.addEventListener('resize', () => { if(!scratchTriggered) initScratchCard(); });
+
+        function scratch(e) {
+            if (!isDrawing) return;
+            const rect = scratchCanvas.getBoundingClientRect();
+            // Unified handling for mouse and touch inputs
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            sCtx.globalCompositeOperation = 'destination-out';
+            sCtx.beginPath();
+            sCtx.arc(x, y, 28, 0, Math.PI * 2);
+            sCtx.fill();
+
+            checkScratchPercentage();
+        }
+
+        function checkScratchPercentage() {
+            if (scratchTriggered) return;
+            const imgData = sCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+            let count = 0;
+            // Sampling pixels for mobile performance optimizations
+            for (let i = 3; i < imgData.data.length; i += 16) {
+                if (imgData.data[i] === 0) count++;
+            }
+            const currentPercentage = (count / (imgData.data.length / 16)) * 100;
+            if (currentPercentage > 65) {
+                scratchTriggered = true;
+                scratchCanvas.style.transition = 'opacity 0.6s ease';
+                scratchCanvas.style.opacity = '0';
+                setTimeout(() => scratchCanvas.remove(), 600);
+                triggerConfettiBurst();
+            }
+        }
+
+        scratchCanvas.addEventListener('mousedown', () => isDrawing = true);
+        scratchCanvas.addEventListener('mouseup', () => isDrawing = false);
+        scratchCanvas.addEventListener('mouseleave', () => isDrawing = false);
+        scratchCanvas.addEventListener('mousemove', scratch);
+
+        scratchCanvas.addEventListener('touchstart', () => isDrawing = true);
+        scratchCanvas.addEventListener('touchend', () => isDrawing = false);
+        scratchCanvas.addEventListener('touchmove', scratch);
+
+        /* --- 6. CAKE BLOW BLOW-OUT EVENT --- */
+        const blowBtn = document.getElementById('blow-btn');
+        const flames = document.querySelectorAll('.flame');
+
+        blowBtn.addEventListener('click', () => {
+            flames.forEach(f => f.classList.add('extinguished'));
+            triggerConfettiBurst(3000); // 3-second celebration sequence
+            blowBtn.innerText = 'Happy Birthday! 🎉';
+            blowBtn.style.pointerEvents = 'none';
+        });
+
+        /* --- 7. FOOTER CANVAS: RAINING PETALS --- */
+        const footerCanvas = document.getElementById('footer-canvas');
+        const fCtx = footerCanvas.getContext('2d');
+        let fParticles = [];
+
+        function resizeFooterCanvas() {
+            footerCanvas.width = footerCanvas.parentElement.clientWidth;
+            footerCanvas.height = footerCanvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeFooterCanvas);
+        resizeFooterCanvas();
+
+        class RainingPetal {
+            constructor() { this.reset(); this.y = Math.random() * footerCanvas.height; }
+            reset() {
+                this.x = Math.random() * footerCanvas.width;
+                this.y = -20;
+                this.size = Math.random() * 8 + 6;
+                this.speedY = Math.random() * 1.2 + 0.8;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 2 - 1;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y > footerCanvas.height + 20) this.reset();
+            }
+            draw() {
+                fCtx.save();
+                fCtx.translate(this.x, this.y);
+                fCtx.rotate((this.rotation * Math.PI) / 180);
+                fCtx.fillStyle = 'rgba(232, 160, 191, 0.6)';
+                fCtx.beginPath();
+                fCtx.ellipse(0, 0, this.size / 2, this.size, 0, 0, 2 * Math.PI);
+                fCtx.fill();
+                fCtx.restore();
+            }
+        }
+        for(let i=0; i<25; i++) fParticles.push(new RainingPetal());
+        function animateFooter() {
+            fCtx.clearRect(0,0,footerCanvas.width, footerCanvas.height);
+            fParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateFooter);
+        }
+        animateFooter();
+
+        /* --- 8. CONFETTI ENGINE (PURE PERFORMANCE CANVAS) --- */
+        const confCanvas = document.getElementById('global-confetti-canvas');
+        const cCtx = confCanvas.getContext('2d');
+        let confParticles = [];
+        let confActive = false;
+        let confTimer = null;
+
+        function resizeConfetti() {
+            confCanvas.width = window.innerWidth;
+            confCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfetti);
+        resizeConfetti();
+
+        class Confetti {
+            constructor() {
+                this.x = Math.random() * confCanvas.width;
+                this.y = Math.random() * -50 - 20;
+                this.size = Math.random() * 6 + 6;
+                this.color = ['#E8A0BF', '#B76E79', '#C9748A', '#FFF', '#FFD700'][Math.floor(Math.random() * 5)];
+                this.speedY = Math.random() * 3 + 4;
+                this.speedX = Math.random() * 4 - 2;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 4 + 2;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotSpeed;
+                if(this.y > confCanvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * confCanvas.width;
+                }
+            }
+            draw() {
+                cCtx.save();
+                cCtx.translate(this.x, this.y);
+                cCtx.rotate((this.rotation * Math.PI) / 180);
+                cCtx.fillStyle = this.color;
+                cCtx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                cCtx.restore();
+            }
+        }
+
+        function triggerConfettiBurst(duration = 2500) {
+            if(!confActive) {
+                confParticles = [];
+                for(let i=0; i<120; i++) confParticles.push(new Confetti());
+                confActive = true;
+                animateConfetti();
+            } else {
+                clearTimeout(confTimer);
+            }
+            confTimer = setTimeout(() => { confActive = false; }, duration);
+        }
+
+        function animateConfetti() {
+            if (!confActive && confParticles.every(p => p.y > confCanvas.height || p.y < 0)) {
+                cCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+                return;
+            }
+            cCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+            confParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
